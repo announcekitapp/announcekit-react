@@ -1,0 +1,21 @@
+{
+  "name": "announcekit-react",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "announcekit",
+  "license": "MIT",
+  "dependencies": {
+    "@types/react": "^16.7.18",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "devDependencies": {
+    "typescript": "^2.7.2"
+  }
+}

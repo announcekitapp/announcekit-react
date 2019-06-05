@@ -9,14 +9,14 @@ The easiest way to use AnnounceKit widgets in your React App.
 ## Installation
 
 ```sh
-yarn add announcekit
+yarn add announcekit-react
 ```
 
 ## Usage
 
 ```js
   import React from 'react';
-  import AnnouncekitWidget from 'announcekit';
+  import AnnouncekitWidget from 'announcekit-react';
 
   class App extends React.Component {
     render() {

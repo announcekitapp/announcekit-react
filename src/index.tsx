@@ -83,33 +83,34 @@ export default function({
       version: 2,
       selector,
       ...styleParams,
-      onWidgetInit: _widget => {
-        if (onWidgetInit) {
-          onWidgetInit(_widget);
-        }
-      },
-      onWidgetOpen: _widget => {
-        if (onWidgetOpen) {
-          onWidgetOpen(_widget);
-        }
-      },
-      onWidgetClose: _widget => {
-        if (onWidgetClose) {
-          onWidgetClose(_widget);
-        }
-      },
-      onWidgetResize: _widget => {
-        if (onWidgetResize) {
-          onWidgetResize(_widget);
-        }
-      },
-      onWidgetUnread: _widget => {
-        if (onWidgetUnread) {
-          onWidgetUnread(_widget);
-        }
-      },
       onInit: _widget => {
         widgetInstance = _widget;
+
+        const ann = window["announcekit"];
+
+        ann.on("widget-open", function({ widget }) {
+          if (widget === _widget && onWidgetOpen) {
+            onWidgetOpen({ widget });
+          }
+        });
+
+        ann.on("widget-close", function({ widget }) {
+          if (widget === _widget && onWidgetClose) {
+            onWidgetClose({ widget });
+          }
+        });
+
+        ann.on("widget-resize", function({ widget, size }) {
+          if (widget === _widget && onWidgetResize) {
+            onWidgetResize({ widget, size });
+          }
+        });
+
+        ann.on("widget-unread", function({ widget, unread }) {
+          if (widget === _widget && onWidgetUnread) {
+            onWidgetUnread({ widget, unread });
+          }
+        });
 
         if (destroyed) {
           widgetInstance.destroy();

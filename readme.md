@@ -1,0 +1,51 @@
+![](https://announcekit.app/images/logo@2x.png)
+
+The easiest way to use AnnounceKit widgets in your React App.
+
+**Visit [https://announcekit.app](https://announcekit.app) to get started with AnnounceKit.**
+
+[Live demo](https://announcekit.app/widgets)
+
+## Installation
+
+```sh
+yarn add announcekit
+```
+
+## Usage
+
+```js
+  import React from 'react';
+  import AnnouncekitWidget from 'announcekit';
+
+  class App extends React.Component {
+    render() {
+      return (
+        <div>
+          <nav>
+          <ul>
+            <li>Home</li>
+            <li>Product</li>
+            <li>News <AnnouncekitWidget widget="https://announcekit.app/widget/eL8Lm" /></li>
+          <ul>
+          </nav>
+        </div>
+        )
+    }
+  }
+
+```
+
+## Props
+
+Common props you may want to specify include:
+
+- **`widget`** - The url of the widget. You can obtain it while creating or editing widget in AnnounceKit Dashboard.
+- `style` - You can apply CSS rules to modify / tune the position of the widget.
+- `catchClick` - Element selector to catch clicks and open the widget.
+- `floatWidget` - Set true if the widget is a Float widget.
+- `widgetInit` - Called after the widget has been successfully loaded.
+- `widgetOpen` - Called when the widget is opened.
+- `widgetClose` - Called when the widget is closed.
+- `widgetResize` - Called when the widget is resized.
+- `widgetUnread` - Called when unread post count of widget has been updated.

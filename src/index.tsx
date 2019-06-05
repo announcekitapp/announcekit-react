@@ -5,16 +5,31 @@ interface Props {
   catchClick?: string;
   style?: React.CSSProperties;
   floatWidget?: boolean;
+  onWidgetInit?: Function;
+  onWidgetOpen?: Function;
+  onWidgetClose?: Function;
+  onWidgetResize?: Function;
+  onWidgetUnread?: Function;
 }
 
-export default function({ widget, catchClick, style, floatWidget }: Props) {
+export default function({
+  widget,
+  catchClick,
+  style,
+  floatWidget,
+  onWidgetInit,
+  onWidgetClose,
+  onWidgetOpen,
+  onWidgetResize,
+  onWidgetUnread
+}: Props) {
   let [loaded, setLoaded] = React.useState(false);
   let selector = catchClick;
+  let name = Math.random()
+    .toString(36)
+    .substring(10);
 
-  if (!catchClick)
-    selector = `.ak-${Math.random()
-      .toString(36)
-      .substring(10)}`;
+  if (!catchClick) selector = `.ak-${name}`;
 
   React.useEffect(() => {
     if (!window["announcekit"]) {
@@ -64,9 +79,35 @@ export default function({ widget, catchClick, style, floatWidget }: Props) {
 
     window["announcekit"].push({
       widget: widget,
+      name,
       version: 2,
       selector,
       ...styleParams,
+      onWidgetInit: _widget => {
+        if (onWidgetInit) {
+          onWidgetInit(_widget);
+        }
+      },
+      onWidgetOpen: _widget => {
+        if (onWidgetOpen) {
+          onWidgetOpen(_widget);
+        }
+      },
+      onWidgetClose: _widget => {
+        if (onWidgetClose) {
+          onWidgetClose(_widget);
+        }
+      },
+      onWidgetResize: _widget => {
+        if (onWidgetResize) {
+          onWidgetResize(_widget);
+        }
+      },
+      onWidgetUnread: _widget => {
+        if (onWidgetUnread) {
+          onWidgetUnread(_widget);
+        }
+      },
       onInit: _widget => {
         widgetInstance = _widget;
 

@@ -1,13 +1,17 @@
 {
   "name": "announcekit-react",
   "version": "1.0.0",
-  "description": "",
+  "description": "Use AnnounceKit widgets in your React App",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc"
   },
-  "keywords": [],
+  "keywords": [
+    "announcekit",
+    "newsfeed",
+    "changelog"
+  ],
   "author": "announcekit",
   "license": "MIT",
   "dependencies": {

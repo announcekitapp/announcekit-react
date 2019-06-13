@@ -5,63 +5,49 @@ interface Props {
   catchClick?: string;
   style?: React.CSSProperties;
   floatWidget?: boolean;
-  onWidgetInit?: Function;
   onWidgetOpen?: Function;
   onWidgetClose?: Function;
   onWidgetResize?: Function;
   onWidgetUnread?: Function;
 }
 
-export default function({
-  widget,
-  catchClick,
-  style,
-  floatWidget,
-  onWidgetInit,
-  onWidgetClose,
-  onWidgetOpen,
-  onWidgetResize,
-  onWidgetUnread
-}: Props) {
-  let [loaded, setLoaded] = React.useState(false);
-  let selector = catchClick;
-  let name = Math.random()
-    .toString(36)
-    .substring(10);
+export default class AnnounceKit extends React.Component<Props, {}> {
+  selector: string;
+  name: string;
 
-  if (!catchClick) selector = `.ak-${name}`;
+  constructor(props) {
+    super(props);
+    this.name = Math.random()
+      .toString(36)
+      .substring(10);
 
-  React.useEffect(() => {
+    this.selector = `.ak-${this.name}`;
+  }
+
+  componentDidMount() {
     if (!window["announcekit"]) {
       window["announcekit"] = window["announcekit"] || {
         queue: [],
-        on: function(n, x) {
-          window["announcekit"].queue.push([n, x]);
-        },
         push: function(x) {
           window["announcekit"].queue.push(x);
+        },
+        on: function(n, x) {
+          window["announcekit"].queue.push([n, x]);
         }
       };
-
-      window["announcekit"].on("init", () => setLoaded(true));
 
       let scripttag = document.createElement("script") as HTMLScriptElement;
       scripttag["async"] = true;
       scripttag["src"] = `https://cdn.announcekit.app/widget.js`;
       let scr = document.getElementsByTagName("script")[0];
       scr.parentNode.insertBefore(scripttag, scr);
-    } else {
-      setLoaded(true);
-    }
-  }, []);
-
-  React.useEffect(() => {
-    if (!loaded) {
-      return;
     }
 
-    let widgetInstance;
-    let destroyed = false;
+    this.loaded();
+  }
+
+  loaded() {
+    let style = this.props.style;
 
     let styleParams = {
       badge: {
@@ -75,57 +61,49 @@ export default function({
       }
     };
 
-    if (floatWidget) selector = null;
+    if (this.props.floatWidget) this.selector = null;
 
     window["announcekit"].push({
-      widget: widget,
-      name,
+      widget: this.props.widget,
+      name: this.name,
       version: 2,
-      selector,
+      selector: this.selector,
       ...styleParams,
       onInit: _widget => {
-        widgetInstance = _widget;
-
         const ann = window["announcekit"];
 
-        ann.on("widget-open", function({ widget }) {
-          if (widget === _widget && onWidgetOpen) {
-            onWidgetOpen({ widget });
-          }
-        });
-
-        ann.on("widget-close", function({ widget }) {
-          if (widget === _widget && onWidgetClose) {
-            onWidgetClose({ widget });
-          }
-        });
-
-        ann.on("widget-resize", function({ widget, size }) {
-          if (widget === _widget && onWidgetResize) {
-            onWidgetResize({ widget, size });
-          }
-        });
-
-        ann.on("widget-unread", function({ widget, unread }) {
-          if (widget === _widget && onWidgetUnread) {
-            onWidgetUnread({ widget, unread });
-          }
-        });
-
-        if (destroyed) {
-          widgetInstance.destroy();
+        if (this.props.catchClick) {
+          const elem = document.querySelector(this.props.catchClick);
+          if (elem) elem.addEventListener("click", () => _widget.open());
         }
+
+        ann.on("widget-open", ({ widget }) => {
+          if (widget === _widget && this.props.onWidgetOpen) {
+            this.props.onWidgetOpen({ widget });
+          }
+        });
+
+        ann.on("widget-close", ({ widget }) => {
+          if (widget === _widget && this.props.onWidgetClose) {
+            this.props.onWidgetClose({ widget });
+          }
+        });
+
+        ann.on("widget-resize", ({ widget, size }) => {
+          if (widget === _widget && this.props.onWidgetResize) {
+            this.props.onWidgetResize({ widget, size });
+          }
+        });
+
+        ann.on("widget-unread", ({ widget, unread }) => {
+          if (widget === _widget && this.props.onWidgetUnread) {
+            this.props.onWidgetUnread({ widget, unread });
+          }
+        });
       }
     });
-
-    return () => {
-      if (widgetInstance) {
-        widgetInstance.destroy();
-      } else {
-        destroyed = true;
-      }
-    };
-  }, [loaded]);
-
-  return <a href="#" style={{ display: "inline" }} className={selector ? selector.slice(1) : ``} />;
+  }
+  render() {
+    return <a href="#" style={{ display: "inline" }} className={this.selector ? this.selector.slice(1) : ``} />;
+  }
 }

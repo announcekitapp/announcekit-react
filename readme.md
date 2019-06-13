@@ -5,6 +5,7 @@ The easiest way to use AnnounceKit widgets in your React App.
 **Visit [https://announcekit.app](https://announcekit.app) to get started with AnnounceKit.**
 
 [Live demo](https://announcekit.app/widgets)
+
 [Documentation](https://announcekit.app/docs/reactjs)
 
 ## Installation

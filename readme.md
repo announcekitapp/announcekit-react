@@ -15,25 +15,32 @@ yarn add announcekit-react
 ## Usage
 
 ```js
-  import React from 'react';
-  import AnnouncekitWidget from 'announcekit-react';
+import React from "react";
+import AnnounceKit from "announcekit-react";
 
-  class App extends React.Component {
-    render() {
-      return (
-        <div>
-          <nav>
+class App extends React.Component {
+  render() {
+    return (
+      <div>
+        <nav>
           <ul>
             <li>Home</li>
             <li>Product</li>
-            <li>News <AnnouncekitWidget widget="https://announcekit.app/widget/eL8Lm" /></li>
-          <ul>
-          </nav>
-        </div>
-        )
-    }
+            <li>
+              News <AnnounceKit widget="https://announcekit.app/widget/eL8Lm" />
+            </li>
+            <li>
+              <a className="click-trigger" href="#">
+                Click here
+              </a>
+              <AnnounceKit catchClick=".click-trigger" widget="https://announcekit.app/widget/eL8Lm" />
+            </li>
+          </ul>
+        </nav>
+      </div>
+    );
   }
-
+}
 ```
 
 ## Props
@@ -44,7 +51,6 @@ Common props you may want to specify include:
 - `style` - You can apply CSS rules to modify / tune the position of the widget.
 - `catchClick` - Element selector to catch clicks and open the widget.
 - `floatWidget` - Set true if the widget is a Float widget.
-- `widgetInit` - Called after the widget has been successfully loaded.
 - `widgetOpen` - Called when the widget is opened.
 - `widgetClose` - Called when the widget is closed.
 - `widgetResize` - Called when the widget is resized.

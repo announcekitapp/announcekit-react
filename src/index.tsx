@@ -9,6 +9,10 @@ interface Props {
   onWidgetClose?: Function;
   onWidgetResize?: Function;
   onWidgetUnread?: Function;
+  userData?: {
+    user_id: string;
+    [key: string]: any;
+  };
 }
 
 export default class AnnounceKit extends React.Component<Props, {}> {
@@ -100,7 +104,8 @@ export default class AnnounceKit extends React.Component<Props, {}> {
             this.props.onWidgetUnread({ widget, unread });
           }
         });
-      }
+      },
+      data: this.props.userData
     });
   }
   render() {

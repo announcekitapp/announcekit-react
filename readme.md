@@ -53,7 +53,8 @@ Common props you may want to specify include:
 - `style` - You can apply CSS rules to modify / tune the position of the widget.
 - `catchClick` - Element selector to catch clicks and open the widget.
 - `floatWidget` - Set true if the widget is a Float widget.
-- `widgetOpen` - Called when the widget is opened.
-- `widgetClose` - Called when the widget is closed.
-- `widgetResize` - Called when the widget is resized.
-- `widgetUnread` - Called when unread post count of widget has been updated.
+- `userData` - User properties (for user tracking)
+- `onWidgetOpen` - Called when the widget is opened.
+- `onWidgetClose` - Called when the widget is closed.
+- `onWidgetResize` - Called when the widget is resized.
+- `onWidgetUnread` - Called when unread post count of widget has been updated.

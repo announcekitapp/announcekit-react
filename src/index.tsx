@@ -18,6 +18,7 @@ interface Props {
 export default class AnnounceKit extends React.Component<Props, {}> {
   selector: string;
   name: string;
+  widgetInstance: any;
 
   constructor(props) {
     super(props);
@@ -26,6 +27,38 @@ export default class AnnounceKit extends React.Component<Props, {}> {
       .substring(10);
 
     this.selector = `.ak-${this.name}`;
+  }
+
+  isEquivalent(a, b) {
+    var aProps = Object.getOwnPropertyNames(a);
+    var bProps = Object.getOwnPropertyNames(b);
+
+    if (aProps.length !== bProps.length) {
+      return false;
+    }
+
+    for (var i = 0; i < aProps.length; i++) {
+      var propName = aProps[i];
+
+      if (a[propName] !== b[propName]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  shouldComponentUpdate(props) {
+    return !this.isEquivalent(this.props, props);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!this.isEquivalent(this.props, prevProps)) {
+      if (this.widgetInstance) {
+        this.widgetInstance.destroy();
+        this.loaded();
+      }
+    }
   }
 
   componentDidMount() {
@@ -76,6 +109,8 @@ export default class AnnounceKit extends React.Component<Props, {}> {
       onInit: _widget => {
         const ann = window["announcekit"];
 
+        this.widgetInstance = _widget;
+
         if (this.props.catchClick) {
           const elem = document.querySelector(this.props.catchClick);
           if (elem) elem.addEventListener("click", () => _widget.open());
@@ -108,7 +143,14 @@ export default class AnnounceKit extends React.Component<Props, {}> {
       data: this.props.userData
     });
   }
+
   render() {
-    return <a href="#" style={{ display: "inline" }} className={this.selector ? this.selector.slice(1) : ``} />;
+    return (
+      <a
+        href="#"
+        style={{ display: "inline" }}
+        className={this.selector ? this.selector.slice(1) : ``}
+      />
+    );
   }
 }

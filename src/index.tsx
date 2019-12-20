@@ -22,11 +22,9 @@ export default class AnnounceKit extends React.Component<Props, {}> {
 
   constructor(props) {
     super(props);
-    this.name = Math.random()
+    this.selector = `.ak-${Math.random()
       .toString(36)
-      .substring(10);
-
-    this.selector = `.ak-${this.name}`;
+      .substring(10)}`;
   }
 
   isEquivalent(a, b) {
@@ -65,10 +63,10 @@ export default class AnnounceKit extends React.Component<Props, {}> {
     if (!window["announcekit"]) {
       window["announcekit"] = window["announcekit"] || {
         queue: [],
-        push: function(x) {
+        push: function (x) {
           window["announcekit"].queue.push(x);
         },
-        on: function(n, x) {
+        on: function (n, x) {
           window["announcekit"].queue.push([n, x]);
         }
       };
@@ -100,6 +98,10 @@ export default class AnnounceKit extends React.Component<Props, {}> {
 
     if (this.props.floatWidget) this.selector = null;
 
+    this.name = Math.random()
+      .toString(36)
+      .substring(10);
+
     window["announcekit"].push({
       widget: this.props.widget,
       name: this.name,
@@ -107,6 +109,10 @@ export default class AnnounceKit extends React.Component<Props, {}> {
       selector: this.selector,
       ...styleParams,
       onInit: _widget => {
+        if (_widget.conf.name !== this.name) {
+          return _widget.destroy();
+        }
+
         const ann = window["announcekit"];
 
         this.widgetInstance = _widget;

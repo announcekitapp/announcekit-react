@@ -1,4 +1,5 @@
 import * as React from "react";
+import isEqual from "react-fast-compare"
 
 interface Props {
   widget: string;
@@ -27,31 +28,12 @@ export default class AnnounceKit extends React.Component<Props, {}> {
       .substring(10)}`;
   }
 
-  isEquivalent(a, b) {
-    var aProps = Object.getOwnPropertyNames(a);
-    var bProps = Object.getOwnPropertyNames(b);
-
-    if (aProps.length !== bProps.length) {
-      return false;
-    }
-
-    for (var i = 0; i < aProps.length; i++) {
-      var propName = aProps[i];
-
-      if (a[propName] !== b[propName]) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
   shouldComponentUpdate(props) {
-    return !this.isEquivalent(this.props, props);
+    return !isEqual(this.props, props);
   }
 
   componentDidUpdate(prevProps) {
-    if (!this.isEquivalent(this.props, prevProps)) {
+    if (!isEqual(this.props, prevProps)) {
       if (this.widgetInstance) {
         this.widgetInstance.destroy();
         this.loaded();

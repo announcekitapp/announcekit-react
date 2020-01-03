@@ -23,5 +23,8 @@
   "peerDependencies": {
     "react": ">=15.0.0",
     "react-dom": ">=15.0.0"
+  },
+  "dependencies": {
+    "react-fast-compare": "^2.0.4"
   }
 }

@@ -6,6 +6,7 @@ interface Props {
   catchClick?: string;
   style?: React.CSSProperties;
   floatWidget?: boolean;
+  embedWidget?: boolean;
   onWidgetOpen?: Function;
   onWidgetClose?: Function;
   onWidgetResize?: Function;
@@ -89,6 +90,7 @@ export default class AnnounceKit extends React.Component<Props, {}> {
       name: this.name,
       version: 2,
       selector: this.selector,
+      embed: this.props.embedWidget ? true : false,
       ...styleParams,
       onInit: _widget => {
         if (_widget.conf.name !== this.name) {

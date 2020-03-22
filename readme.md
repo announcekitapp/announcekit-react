@@ -53,6 +53,7 @@ Common props you may want to specify include:
 - `style` - You can apply CSS rules to modify / tune the position of the widget.
 - `catchClick` - Element selector to catch clicks and open the widget.
 - `floatWidget` - Set true if the widget is a Float widget.
+- `embedWidget` - Set true if the widget is a Embed widget.
 - `userData` - User properties (for user tracking)
 - `onWidgetOpen` - Called when the widget is opened.
 - `onWidgetClose` - Called when the widget is closed.

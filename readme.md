@@ -26,16 +26,13 @@ class App extends React.Component {
       <div>
         <nav>
           <ul>
-            <li>Home</li>
-            <li>Product</li>
             <li>
-              News <AnnounceKit widget="https://announcekit.app/widget/eL8Lm" />
+              <a href="#">Home</a>
             </li>
             <li>
-              <a className="click-trigger" href="#">
-                Click here
-              </a>
-              <AnnounceKit catchClick=".click-trigger" widget="https://announcekit.app/widget/eL8Lm" />
+              <AnnounceKit widget="https://announcekit.app/widgets/v2/34MmKA">
+                <span>What's new</span>
+              </AnnounceKit>
             </li>
           </ul>
         </nav>
@@ -50,11 +47,12 @@ class App extends React.Component {
 Common props you may want to specify include:
 
 - **`widget`** - The url of the widget. You can obtain it while creating or editing widget in AnnounceKit Dashboard.
-- `style` - You can apply CSS rules to modify / tune the position of the widget.
+- `widgetStyle` - You can apply CSS rules to modify / tune the position of the widget.
 - `catchClick` - Element selector to catch clicks and open the widget.
 - `floatWidget` - Set true if the widget is a Float widget.
 - `embedWidget` - Set true if the widget is a Embed widget.
-- `userData` - User properties (for user tracking)
+- `user` - User properties (for user tracking)
+- `data` - Segmentation data
 - `onWidgetOpen` - Called when the widget is opened.
 - `onWidgetClose` - Called when the widget is closed.
 - `onWidgetResize` - Called when the widget is resized.

@@ -1,18 +1,21 @@
 import * as React from "react";
-import isEqual from "react-fast-compare"
+import isEqual from "react-fast-compare";
 
 interface Props {
   widget: string;
   catchClick?: string;
-  style?: React.CSSProperties;
+  widgetStyle?: React.CSSProperties;
   floatWidget?: boolean;
   embedWidget?: boolean;
   onWidgetOpen?: Function;
   onWidgetClose?: Function;
   onWidgetResize?: Function;
   onWidgetUnread?: Function;
-  userData?: {
+  user?: {
     user_id: string;
+    [key: string]: any;
+  };
+  data?: {
     [key: string]: any;
   };
 }
@@ -25,8 +28,8 @@ export default class AnnounceKit extends React.Component<Props, {}> {
   constructor(props) {
     super(props);
     this.selector = `.ak-${Math.random()
-      .toString(36)
-      .substring(10)}`;
+        .toString(36)
+        .substring(10)}`;
   }
 
   shouldComponentUpdate(props) {
@@ -46,17 +49,17 @@ export default class AnnounceKit extends React.Component<Props, {}> {
     if (!window["announcekit"]) {
       window["announcekit"] = window["announcekit"] || {
         queue: [],
-        push: function (x) {
+        push: function(x) {
           window["announcekit"].queue.push(x);
         },
-        on: function (n, x) {
+        on: function(n, x) {
           window["announcekit"].queue.push([n, x]);
         }
       };
 
       let scripttag = document.createElement("script") as HTMLScriptElement;
       scripttag["async"] = true;
-      scripttag["src"] = `https://cdn.announcekit.app/widget.js`;
+      scripttag["src"] = `https://cdn.announcekit.app/widget-v2.js`;
       let scr = document.getElementsByTagName("script")[0];
       scr.parentNode.insertBefore(scripttag, scr);
     }
@@ -65,7 +68,7 @@ export default class AnnounceKit extends React.Component<Props, {}> {
   }
 
   loaded() {
-    let style = this.props.style;
+    let style = this.props.widgetStyle;
 
     let styleParams = {
       badge: {
@@ -79,18 +82,24 @@ export default class AnnounceKit extends React.Component<Props, {}> {
       }
     };
 
-    if (this.props.floatWidget) this.selector = null;
+    if (this.props.floatWidget) {
+      delete styleParams.badge;
+      delete styleParams.line;
+      this.selector = null;
+    }
 
     this.name = Math.random()
-      .toString(36)
-      .substring(10);
+        .toString(36)
+        .substring(10);
 
     window["announcekit"].push({
       widget: this.props.widget,
       name: this.name,
       version: 2,
+      framework: "react",
+      framework_version: "2.0.0",
       selector: this.selector,
-      embed: this.props.embedWidget ? true : false,
+      embed: this.props.embedWidget,
       ...styleParams,
       onInit: _widget => {
         if (_widget.conf.name !== this.name) {
@@ -130,17 +139,20 @@ export default class AnnounceKit extends React.Component<Props, {}> {
           }
         });
       },
-      data: this.props.userData
+      data: this.props.data,
+      user: this.props.user
     });
   }
 
   render() {
     return (
-      <a
-        href="#"
-        style={{ display: "inline" }}
-        className={this.selector ? this.selector.slice(1) : ``}
-      />
+        <a
+            href="#"
+            style={{ display: "inline" }}
+            className={this.selector ? this.selector.slice(1) : ``}
+        >
+          {this.props.children}
+        </a>
     );
   }
 }

@@ -5,7 +5,9 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "publish": "npm publish && git push",
+    "deploy": "npm run-script build && npm run-script publish"
   },
   "repository": "https://github.com/announcekitapp/announcekit-react",
   "homepage": "https://announcekit.app",

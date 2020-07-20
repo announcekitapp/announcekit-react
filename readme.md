@@ -48,8 +48,9 @@ class App extends React.Component {
 - `widgetStyle` - You can apply CSS rules to modify / tune the position of the widget launcher.
 - `floatWidget` - Set true if the widget is a Float widget.
 - `embedWidget` - Set true if the widget is a Embed widget.
-- `user` - User properties (for user tracking)
-- `data` - Segmentation data
+- `lang` - Language selector
+- `user` - User properties (for [user tracking](https://announcekit.app/docs#user-tracking))
+- `data` - [Segmentation data](https://announcekit.app/docs#segmentation)
 - `onWidgetOpen` - Called when the widget is opened.
 - `onWidgetClose` - Called when the widget is closed.
 - `onWidgetResize` - Called when the widget is resized.

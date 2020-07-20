@@ -113,6 +113,11 @@ export default class AnnounceKit extends React.Component<Props, {}> {
 
         this.widgetInstance = _widget;
 
+        if (this.props.catchClick) {
+          const elem = document.querySelector(this.props.catchClick);
+          if (elem) elem.addEventListener("click", () => _widget.open());
+        }
+
         this.widgetHandlers.forEach(h => h(_widget));
         this.widgetHandlers = [];
 

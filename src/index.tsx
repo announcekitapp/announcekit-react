@@ -12,7 +12,7 @@ interface Props {
   onWidgetResize?: Function;
   onWidgetUnread?: Function;
   user?: {
-    user_id: string;
+    id: string;
     [key: string]: any;
   };
   data?: {

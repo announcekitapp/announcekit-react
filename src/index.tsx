@@ -21,15 +21,18 @@ interface Props {
 }
 
 export default class AnnounceKit extends React.Component<Props, {}> {
-  selector: string;
-  name: string;
-  widgetInstance: any;
+  private selector: string;
+  private name: string;
+  private widgetInstance: any;
+  private widgetHandlers: any[];
 
   constructor(props) {
     super(props);
     this.selector = `.ak-${Math.random()
-        .toString(36)
-        .substring(10)}`;
+      .toString(36)
+      .substring(10)}`;
+
+    this.widgetHandlers = [];
   }
 
   shouldComponentUpdate(props) {
@@ -67,7 +70,7 @@ export default class AnnounceKit extends React.Component<Props, {}> {
     this.loaded();
   }
 
-  loaded() {
+  private loaded() {
     let style = this.props.widgetStyle;
 
     let styleParams = {
@@ -89,8 +92,8 @@ export default class AnnounceKit extends React.Component<Props, {}> {
     }
 
     this.name = Math.random()
-        .toString(36)
-        .substring(10);
+      .toString(36)
+      .substring(10);
 
     window["announcekit"].push({
       widget: this.props.widget,
@@ -110,10 +113,8 @@ export default class AnnounceKit extends React.Component<Props, {}> {
 
         this.widgetInstance = _widget;
 
-        if (this.props.catchClick) {
-          const elem = document.querySelector(this.props.catchClick);
-          if (elem) elem.addEventListener("click", () => _widget.open());
-        }
+        this.widgetHandlers.forEach(h => h(_widget));
+        this.widgetHandlers = [];
 
         ann.on("widget-open", ({ widget }) => {
           if (widget === _widget && this.props.onWidgetOpen) {
@@ -144,15 +145,42 @@ export default class AnnounceKit extends React.Component<Props, {}> {
     });
   }
 
+  private withWidget(fn) {
+    return new Promise(res => {
+      if (this.widgetInstance) {
+        return res(fn(this.widgetInstance));
+      } else {
+        this.widgetHandlers.push(widget => {
+          res(fn(widget));
+        });
+      }
+    });
+  }
+
+  open() {
+    return this.withWidget(widget => widget.open());
+  }
+
+  close() {
+    return this.withWidget(widget => widget.close());
+  }
+
+  instance() {
+    return this.withWidget(widget => widget);
+  }
+
+  unread() {
+    return this.withWidget(widget => widget.state.ui.unreadCount);
+  }
+
   render() {
     return (
-        <a
-            href="#"
-            style={{ display: "inline" }}
-            className={this.selector ? this.selector.slice(1) : ``}
-        >
-          {this.props.children}
-        </a>
+      <div
+        style={{ display: "inline" }}
+        className={this.selector ? this.selector.slice(1) : ``}
+      >
+        {this.props.children}
+      </div>
     );
   }
 }

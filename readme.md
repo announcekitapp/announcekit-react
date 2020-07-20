@@ -44,11 +44,8 @@ class App extends React.Component {
 
 ## Props
 
-Common props you may want to specify include:
-
 - **`widget`** - The url of the widget. You can obtain it while creating or editing widget in AnnounceKit Dashboard.
-- `widgetStyle` - You can apply CSS rules to modify / tune the position of the widget.
-- `catchClick` - Element selector to catch clicks and open the widget.
+- `widgetStyle` - You can apply CSS rules to modify / tune the position of the widget launcher.
 - `floatWidget` - Set true if the widget is a Float widget.
 - `embedWidget` - Set true if the widget is a Embed widget.
 - `user` - User properties (for user tracking)
@@ -57,3 +54,36 @@ Common props you may want to specify include:
 - `onWidgetClose` - Called when the widget is closed.
 - `onWidgetResize` - Called when the widget is resized.
 - `onWidgetUnread` - Called when unread post count of widget has been updated.
+
+## API
+
+You can use `ref` property to access the widget instance and call control functions
+
+- `open()`
+- `close()` 
+- `unread()`
+- `instance()`
+
+
+```js
+function App() {
+  const ref = React.createRef<AnnounceKit>();
+
+  React.useEffect(() => {
+    ref.current.unread().then(an => console.log("unread", an));
+  });
+  
+  return (
+    <div>
+        <button onClick={async() => await ref.current.open()}>
+            Click to open widget
+        </button>
+        <AnnounceKit ref={ref} widget="https://announcekit.app/widgets/v2/3739N6">
+            <span>What's new</span>
+        </AnnounceKit>
+    </div>
+    )
+}
+```
+
+

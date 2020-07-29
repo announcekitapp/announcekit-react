@@ -3,6 +3,7 @@ import isEqual from "react-fast-compare";
 
 interface Props {
   widget: string;
+  lang?: string;
   catchClick?: string;
   widgetStyle?: React.CSSProperties;
   floatWidget?: boolean;
@@ -146,7 +147,8 @@ export default class AnnounceKit extends React.Component<Props, {}> {
         });
       },
       data: this.props.data,
-      user: this.props.user
+      user: this.props.user,
+      lang: this.props.lang
     });
   }
 

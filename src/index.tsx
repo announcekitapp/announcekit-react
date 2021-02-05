@@ -37,7 +37,7 @@ export default class AnnounceKit extends React.Component<Props, {}> {
   }
 
   shouldComponentUpdate(props) {
-    return !isEqual(this.props, props);
+    return !isEqual(this.props.data, props.data);
   }
 
   componentDidUpdate(prevProps) {

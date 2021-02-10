@@ -27,7 +27,7 @@ export default class AnnounceKit extends React.Component<Props, {}> {
   private widgetInstance: any;
   private widgetHandlers: any[];
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.selector = `.ak-${Math.random()
       .toString(36)
@@ -36,12 +36,33 @@ export default class AnnounceKit extends React.Component<Props, {}> {
     this.widgetHandlers = [];
   }
 
-  shouldComponentUpdate(props) {
-    return !isEqual(this.props, props);
+  shouldComponentUpdate(props: Props) {
+    const oldProps = {
+      data: this.props.data,
+      user: this.props.user,
+      lang: this.props.lang,
+    }
+    const newProps = {
+      data: props.data,
+      user: props.user,
+      lang: props.lang,
+    }
+
+    return !isEqual(oldProps, newProps);
   }
 
-  componentDidUpdate(prevProps) {
-    if (!isEqual(this.props, prevProps)) {
+  componentDidUpdate(prevProps: Props) {
+    const oldProps = {
+      data: this.props.data,
+      user: this.props.user,
+      lang: this.props.lang,
+    }
+    const newProps = {
+      data: prevProps.data,
+      user: prevProps.user,
+      lang: prevProps.lang,
+    }
+    if (!isEqual(oldProps, newProps)) {
       if (this.widgetInstance) {
         this.widgetInstance.destroy();
         this.loaded();
@@ -53,10 +74,10 @@ export default class AnnounceKit extends React.Component<Props, {}> {
     if (!window["announcekit"]) {
       window["announcekit"] = window["announcekit"] || {
         queue: [],
-        push: function(x) {
+        push: function (x) {
           window["announcekit"].queue.push(x);
         },
-        on: function(n, x) {
+        on: function (n, x) {
           window["announcekit"].queue.push([n, x]);
         }
       };
@@ -65,10 +86,11 @@ export default class AnnounceKit extends React.Component<Props, {}> {
       scripttag["async"] = true;
       scripttag["src"] = `https://cdn.announcekit.app/widget-v2.js`;
       let scr = document.getElementsByTagName("script")[0];
-      scr.parentNode.insertBefore(scripttag, scr);
+      scr?.parentNode?.insertBefore(scripttag, scr);
     }
 
     this.loaded();
+
   }
 
   private loaded() {
@@ -181,8 +203,11 @@ export default class AnnounceKit extends React.Component<Props, {}> {
   }
 
   render() {
+
     return (
       <div
+        data-testid="ann"
+
         style={{ display: "inline" }}
         className={this.selector ? this.selector.slice(1) : ``}
       >

@@ -12,7 +12,6 @@ interface Props {
   onWidgetClose?: Function;
   onWidgetResize?: Function;
   onWidgetUnread?: Function;
-
   user?: {
     id: string;
     [key: string]: any;

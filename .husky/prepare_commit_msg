@@ -1,0 +1,17 @@
+fetch_github_issue_no() {
+  git rev-parse --abbrev-ref HEAD | grep -e '^[0-9]\+' -o
+}
+
+ISSUE_NO=`fetch_github_issue_no`
+# Get the current commit message
+MESSAGE="$(cat $1)"
+echo $MESSAGE
+
+# Append the issue number if the issue number is in the branch
+# and the issue number is not already in the commit message.
+if [ -n "$ISSUE_NO" ]  && [[ $MESSAGE != *"#$ISSUE_NO"* ]]
+then
+   NEW_MESSAGE="$MESSAGE [issue #$ISSUE_NO]"
+   echo "New commit message: $NEW_MESSAGE"
+   echo "$NEW_MESSAGE" > $1
+fi

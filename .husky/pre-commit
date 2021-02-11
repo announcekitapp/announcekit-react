@@ -1,7 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-#./node_modules/.bin/pretty-quick --staged
-
-echo $HUSKY_GIT_PARAMS
-env
+./node_modules/.bin/pretty-quick --staged

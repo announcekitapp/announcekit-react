@@ -11,6 +11,7 @@ interface Props {
   onWidgetOpen?: Function;
   onWidgetClose?: Function;
   onWidgetResize?: Function;
+
   onWidgetUnread?: Function;
   user?: {
     id: string;
@@ -29,9 +30,7 @@ export default class AnnounceKit extends React.Component<Props, {}> {
 
   constructor(props) {
     super(props);
-    this.selector = `.ak-${Math.random()
-      .toString(36)
-      .substring(10)}`;
+    this.selector = `.ak-${Math.random().toString(36).substring(10)}`;
 
     this.widgetHandlers = [];
   }
@@ -53,12 +52,12 @@ export default class AnnounceKit extends React.Component<Props, {}> {
     if (!window["announcekit"]) {
       window["announcekit"] = window["announcekit"] || {
         queue: [],
-        push: function(x) {
+        push: function (x) {
           window["announcekit"].queue.push(x);
         },
-        on: function(n, x) {
+        on: function (n, x) {
           window["announcekit"].queue.push([n, x]);
-        }
+        },
       };
 
       let scripttag = document.createElement("script") as HTMLScriptElement;
@@ -76,14 +75,14 @@ export default class AnnounceKit extends React.Component<Props, {}> {
 
     let styleParams = {
       badge: {
-        style
+        style,
       },
       line: {
-        style
+        style,
       },
       float: {
-        style
-      }
+        style,
+      },
     };
 
     if (this.props.floatWidget) {
@@ -92,9 +91,7 @@ export default class AnnounceKit extends React.Component<Props, {}> {
       this.selector = null;
     }
 
-    this.name = Math.random()
-      .toString(36)
-      .substring(10);
+    this.name = Math.random().toString(36).substring(10);
 
     window["announcekit"].push({
       widget: this.props.widget,
@@ -105,7 +102,7 @@ export default class AnnounceKit extends React.Component<Props, {}> {
       selector: this.selector,
       embed: this.props.embedWidget,
       ...styleParams,
-      onInit: _widget => {
+      onInit: (_widget) => {
         if (_widget.conf.name !== this.name) {
           return _widget.destroy();
         }
@@ -119,7 +116,7 @@ export default class AnnounceKit extends React.Component<Props, {}> {
           if (elem) elem.addEventListener("click", () => _widget.open());
         }
 
-        this.widgetHandlers.forEach(h => h(_widget));
+        this.widgetHandlers.forEach((h) => h(_widget));
         this.widgetHandlers = [];
 
         ann.on("widget-open", ({ widget }) => {
@@ -148,16 +145,16 @@ export default class AnnounceKit extends React.Component<Props, {}> {
       },
       data: this.props.data,
       user: this.props.user,
-      lang: this.props.lang
+      lang: this.props.lang,
     });
   }
 
   private withWidget(fn) {
-    return new Promise(res => {
+    return new Promise((res) => {
       if (this.widgetInstance) {
         return res(fn(this.widgetInstance));
       } else {
-        this.widgetHandlers.push(widget => {
+        this.widgetHandlers.push((widget) => {
           res(fn(widget));
         });
       }
@@ -165,19 +162,19 @@ export default class AnnounceKit extends React.Component<Props, {}> {
   }
 
   open() {
-    return this.withWidget(widget => widget.open());
+    return this.withWidget((widget) => widget.open());
   }
 
   close() {
-    return this.withWidget(widget => widget.close());
+    return this.withWidget((widget) => widget.close());
   }
 
   instance() {
-    return this.withWidget(widget => widget);
+    return this.withWidget((widget) => widget);
   }
 
   unread() {
-    return this.withWidget(widget => widget.state.ui.unreadCount);
+    return this.withWidget((widget) => widget.state.ui.unreadCount);
   }
 
   render() {

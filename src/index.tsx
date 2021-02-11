@@ -201,7 +201,6 @@ export default class AnnounceKit extends React.Component<Props, {}> {
   render() {
     return (
       <div
-        data-testid="ann"
         style={{ display: "inline" }}
         className={this.selector ? this.selector.slice(1) : ``}
       >

@@ -31,7 +31,7 @@ class App extends React.Component {
             </li>
             <li>
               <AnnounceKit widget="https://announcekit.app/widgets/v2/34MmKA">
-                <span>What's new</span>
+                <span>Whats new</span>
               </AnnounceKit>
             </li>
           </ul>
@@ -61,10 +61,9 @@ class App extends React.Component {
 You can use `ref` property to access the widget instance and call control functions
 
 - `open()`
-- `close()` 
+- `close()`
 - `unread()`
 - `instance()`
-
 
 ```js
 function App() {
@@ -73,18 +72,16 @@ function App() {
   React.useEffect(() => {
     ref.current.unread().then(an => console.log("unread", an));
   });
-  
+
   return (
     <div>
         <button onClick={async() => await ref.current.open()}>
             Click to open widget
         </button>
         <AnnounceKit ref={ref} widget="https://announcekit.app/widgets/v2/3739N6">
-            <span>What's new</span>
+            <span>Whats new</span>
         </AnnounceKit>
     </div>
     )
 }
 ```
-
-

@@ -40,12 +40,12 @@ export default class AnnounceKit extends React.Component<Props, {}> {
       data: this.props.data,
       user: this.props.user,
       lang: this.props.lang,
-    }
+    };
     const newProps = {
       data: props.data,
       user: props.user,
       lang: props.lang,
-    }
+    };
 
     return !isEqual(oldProps, newProps);
   }
@@ -55,12 +55,12 @@ export default class AnnounceKit extends React.Component<Props, {}> {
       data: this.props.data,
       user: this.props.user,
       lang: this.props.lang,
-    }
+    };
     const newProps = {
       data: prevProps.data,
       user: prevProps.user,
       lang: prevProps.lang,
-    }
+    };
     if (!isEqual(oldProps, newProps)) {
       if (this.widgetInstance) {
         this.widgetInstance.destroy();
@@ -89,7 +89,6 @@ export default class AnnounceKit extends React.Component<Props, {}> {
     }
 
     this.loaded();
-
   }
 
   private loaded() {
@@ -200,11 +199,9 @@ export default class AnnounceKit extends React.Component<Props, {}> {
   }
 
   render() {
-
     return (
       <div
         data-testid="ann"
-
         style={{ display: "inline" }}
         className={this.selector ? this.selector.slice(1) : ``}
       >

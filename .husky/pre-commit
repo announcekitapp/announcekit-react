@@ -3,3 +3,4 @@
 
 #./node_modules/.bin/pretty-quick --staged
 
+echo $HUSKY_GIT_PARAMS

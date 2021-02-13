@@ -1,12 +1,12 @@
 {
   "name": "announcekit-react",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "Use AnnounceKit widgets in your React App",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "postinstall": "husky install"
+    "prepare": "husky install"
   },
   "repository": "https://github.com/announcekitapp/announcekit-react",
   "homepage": "https://announcekit.app",

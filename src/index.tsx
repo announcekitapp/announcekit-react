@@ -6,6 +6,7 @@ interface Props {
   lang?: string;
   catchClick?: string;
   widgetStyle?: React.CSSProperties;
+  boosters?: boolean;
   floatWidget?: boolean;
   embedWidget?: boolean;
   onWidgetOpen?: Function;
@@ -122,6 +123,8 @@ export default class AnnounceKit extends React.Component<Props, {}> {
       framework_version: "2.0.0",
       selector: this.selector,
       embed: this.props.embedWidget,
+      boosters:
+        typeof this.props.boosters === "undefined" ? true : this.props.boosters,
       ...styleParams,
       onInit: (_widget) => {
         if (_widget.conf.name !== this.name) {

@@ -71,6 +71,8 @@ export default class AnnounceKit extends React.Component<Props, {}> {
   }
 
   componentDidMount() {
+    if (typeof window === "undefined") return;
+
     if (!window["announcekit"]) {
       window["announcekit"] = window["announcekit"] || {
         queue: [],

@@ -163,11 +163,9 @@ export default class AnnounceKit extends React.Component<Props, {}> {
           }
         });
 
-        ann.on("widget-unread", ({ widget, unread }) => {
-          if (widget === _widget && this.props.onWidgetUnread) {
-            this.props.onWidgetUnread({ widget, unread });
-          }
-        });
+        if (this.props.onWidgetUnread) {
+          this.props.onWidgetUnread(_widget.state.ui.unreadCount);
+        }
       },
       data: this.props.data,
       user: this.props.user,

@@ -188,12 +188,10 @@ function AnnounceKit(props: AnnounceKitProps, ref: any) {
       widgetRef.current = null;
     };
   }, [
+    { user, data, lang },
     customConfig,
     widget,
-    lang,
     name,
-    user,
-    data,
     floatWidget,
     embedWidget,
     boosters,

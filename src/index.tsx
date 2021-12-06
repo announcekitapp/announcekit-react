@@ -12,6 +12,8 @@ interface Props {
   onWidgetOpen?: Function;
   onWidgetClose?: Function;
   onWidgetResize?: Function;
+  labels?: [string];
+  userToken?: string;
 
   onWidgetUnread?: Function;
   user?: {
@@ -41,11 +43,15 @@ export default class AnnounceKit extends React.Component<Props, {}> {
       data: this.props.data,
       user: this.props.user,
       lang: this.props.lang,
+      userToken: this.props.userToken,
+      labels: this.props.labels
     };
     const newProps = {
       data: props.data,
       user: props.user,
       lang: props.lang,
+      userToken: props.userToken,
+      labels: props.labels
     };
 
     return !isEqual(oldProps, newProps);
@@ -56,11 +62,15 @@ export default class AnnounceKit extends React.Component<Props, {}> {
       data: this.props.data,
       user: this.props.user,
       lang: this.props.lang,
+      userToken: this.props.userToken,
+      labels: this.props.labels
     };
     const newProps = {
       data: prevProps.data,
       user: prevProps.user,
       lang: prevProps.lang,
+      userToken: prevProps.userToken,
+      labels: prevProps.labels
     };
     if (!isEqual(oldProps, newProps)) {
       if (this.widgetInstance) {
@@ -170,6 +180,8 @@ export default class AnnounceKit extends React.Component<Props, {}> {
       data: this.props.data,
       user: this.props.user,
       lang: this.props.lang,
+      labels: this.props.labels,
+      user_token: this.props.userToken
     });
   }
 

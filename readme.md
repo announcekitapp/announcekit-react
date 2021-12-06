@@ -30,7 +30,7 @@ class App extends React.Component {
               <a href="#">Home</a>
             </li>
             <li>
-              <AnnounceKit widget="https://announcekit.app/widgets/v2/34MmKA">
+              <AnnounceKit widget="https://announcekit.co/widgets/v2/3xdhio">
                 <span>Whats new</span>
               </AnnounceKit>
             </li>
@@ -52,6 +52,8 @@ class App extends React.Component {
 - `lang` - Language selector
 - `user` - User properties (for [user tracking](https://announcekit.app/docs#user-tracking))
 - `data` - [Segmentation data](https://announcekit.app/docs#segmentation)
+- `labels` -  In case you want to filter and display posts under a specific label or tag.
+- `user_token` - JWT setup: https://announcekit.app/docs/jwt
 - `onWidgetOpen` - Called when the widget is opened.
 - `onWidgetClose` - Called when the widget is closed.
 - `onWidgetResize` - Called when the widget is resized.
@@ -79,7 +81,7 @@ function App() {
         <button onClick={async() => await ref.current.open()}>
             Click to open widget
         </button>
-        <AnnounceKit ref={ref} widget="https://announcekit.app/widgets/v2/3739N6">
+        <AnnounceKit ref={ref} widget="https://announcekit.co/widgets/v2/3xdhio">
             <span>Whats new</span>
         </AnnounceKit>
     </div>

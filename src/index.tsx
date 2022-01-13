@@ -1,7 +1,7 @@
 import * as React from "react";
 import isEqual from "react-fast-compare";
 
-interface Props {
+export interface AnnounceKitProps {
   widget: string;
   lang?: string;
   catchClick?: string;
@@ -14,7 +14,6 @@ interface Props {
   onWidgetResize?: Function;
   labels?: [string];
   userToken?: string;
-
   onWidgetUnread?: Function;
   user?: {
     id: string;
@@ -25,20 +24,20 @@ interface Props {
   };
 }
 
-export default class AnnounceKit extends React.Component<Props, {}> {
+export class AnnounceKit extends React.Component<AnnounceKitProps, {}> {
   private selector: string;
   private name: string;
   private widgetInstance: any;
   private widgetHandlers: any[];
 
-  constructor(props: Props) {
+  constructor(props: AnnounceKitProps) {
     super(props);
     this.selector = `.ak-${Math.random().toString(36).substring(10)}`;
 
     this.widgetHandlers = [];
   }
 
-  shouldComponentUpdate(props: Props) {
+  shouldComponentUpdate(props: AnnounceKitProps) {
     const oldProps = {
       data: this.props.data,
       user: this.props.user,
@@ -57,7 +56,7 @@ export default class AnnounceKit extends React.Component<Props, {}> {
     return !isEqual(oldProps, newProps);
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: AnnounceKitProps) {
     const oldProps = {
       data: this.props.data,
       user: this.props.user,
@@ -224,3 +223,5 @@ export default class AnnounceKit extends React.Component<Props, {}> {
     );
   }
 }
+
+export default AnnounceKit;

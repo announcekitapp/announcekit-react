@@ -12,7 +12,7 @@ interface Props {
   onWidgetOpen?: Function;
   onWidgetClose?: Function;
   onWidgetResize?: Function;
-  labels?: [string];
+  labels?: string[];
   userToken?: string;
 
   onWidgetUnread?: Function;

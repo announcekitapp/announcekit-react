@@ -1,6 +1,6 @@
 {
   "name": "announcekit-react",
-  "version": "2.1.7",
+  "version": "2.1.8",
   "description": "Use AnnounceKit widgets in your React App",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

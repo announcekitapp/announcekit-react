@@ -10,6 +10,8 @@ export type AnnounceKitProps = {
   lang?: string;
   name?: string;
 
+  trackLocationChanges?: boolean;
+
   onWidgetOpen?: Function;
   onWidgetClose?: Function;
   onWidgetResize?: Function;
@@ -48,7 +50,7 @@ function globalAnnouncekit() {
         win.announcekit.on("init", function () {
           win.announcekit.off(name, fn);
         });
-      },
+      }
     };
 
     let scripttag = document.createElement("script") as HTMLScriptElement;
@@ -93,7 +95,7 @@ function AnnounceKit(props: AnnounceKitProps, ref: any) {
 
     unread(): number {
       return this.withWidget((widget: any) => widget.state.ui.unreadCount);
-    },
+    }
   }));
 
   const { onWidgetOpen, onWidgetClose, onWidgetResize, onWidgetUnread } = props;
@@ -134,8 +136,24 @@ function AnnounceKit(props: AnnounceKitProps, ref: any) {
     lang,
     name,
     user,
-    data,
+    data
   } = props;
+
+  const [loc, setLoc] = React.useState(window.location.href);
+
+  useEffect(() => {
+    if (!props.trackLocationChanges) {
+      return;
+    }
+
+    let timer = setInterval(() => {
+      if (loc !== window.location.href) {
+        setLoc(window.location.href);
+      }
+    }, 250);
+
+    return () => clearInterval(timer);
+  }, [props.trackLocationChanges, loc]);
 
   // Push new widget config
   useDeepCompareEffect(() => {
@@ -160,7 +178,7 @@ function AnnounceKit(props: AnnounceKitProps, ref: any) {
       style: {
         line: floatWidget ? {} : { ...widgetStyle },
         badge: floatWidget ? {} : { ...widgetStyle },
-        float: { ...widgetStyle },
+        float: { ...widgetStyle }
       },
 
       onInit: (w: any) => {
@@ -180,7 +198,7 @@ function AnnounceKit(props: AnnounceKitProps, ref: any) {
       lang,
       name,
       user,
-      data,
+      data
     });
 
     return () => {
@@ -195,6 +213,7 @@ function AnnounceKit(props: AnnounceKitProps, ref: any) {
     floatWidget,
     embedWidget,
     boosters,
+    loc
   ]);
 
   return (

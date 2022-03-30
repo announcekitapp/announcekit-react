@@ -1,227 +1,230 @@
 import * as React from "react";
-import isEqual from "react-fast-compare";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+import useDeepCompareEffect from "use-deep-compare-effect";
 
-export interface AnnounceKitProps {
+export type AnnounceKitProps = {
+  children?: any;
+  className?: string;
+
   widget: string;
   lang?: string;
-  catchClick?: string;
+  name?: string;
+
+  trackLocationChanges?: boolean;
+
+  onWidgetOpen?: Function;
+  onWidgetClose?: Function;
+  onWidgetResize?: Function;
+  onWidgetUnread?: Function;
+
   widgetStyle?: React.CSSProperties;
   boosters?: boolean;
   floatWidget?: boolean;
   embedWidget?: boolean;
-  onWidgetOpen?: Function;
-  onWidgetClose?: Function;
-  onWidgetResize?: Function;
-  labels?: string[];
-  userToken?: string;
-  onWidgetUnread?: Function;
+
   user?: {
     id: string;
     [key: string]: any;
   };
+
   data?: {
     [key: string]: any;
   };
+
+  customConfig?: any;
+};
+
+function globalAnnouncekit() {
+  const win = window as any;
+
+  if (!win.announcekit) {
+    win.announcekit = win.announcekit || {
+      queue: [],
+      push: function (x: any) {
+        win.announcekit.queue.push(x);
+      },
+      on: function (n: string, x: Function) {
+        win.announcekit.queue.push([n, x]);
+      },
+      off: function (name: string, fn: Function) {
+        win.announcekit.on("init", function () {
+          win.announcekit.off(name, fn);
+        });
+      }
+    };
+
+    let scripttag = document.createElement("script") as HTMLScriptElement;
+    scripttag["async"] = true;
+    scripttag["src"] = `https://cdn.announcekit.app/widget-v2.js`;
+    let scr = document.getElementsByTagName("script")[0];
+    scr?.parentNode?.insertBefore(scripttag, scr);
+  }
+
+  return win.announcekit;
 }
 
-export class AnnounceKit extends React.Component<AnnounceKitProps, {}> {
-  private selector: string;
-  private name: string;
-  private widgetInstance: any;
-  private widgetHandlers: any[];
+function AnnounceKit(props: AnnounceKitProps, ref: any) {
+  const elementRef = useRef<HTMLDivElement>(null);
+  const widgetRef = useRef<any>(null);
+  const widgetHandlers = useRef<any>([]);
 
-  constructor(props: AnnounceKitProps) {
-    super(props);
-    this.selector = `.ak-${Math.random().toString(36).substring(10)}`;
+  useImperativeHandle(ref, () => ({
+    withWidget(fn: Function): any {
+      return new Promise((res) => {
+        if (widgetRef.current) {
+          return res(fn(widgetRef.current));
+        } else {
+          widgetHandlers.current.push((widget: any) => {
+            res(fn(widget));
+          });
+        }
+      });
+    },
 
-    this.widgetHandlers = [];
-  }
+    open() {
+      this.withWidget((widget: any) => widget.open());
+    },
 
-  shouldComponentUpdate(props: AnnounceKitProps) {
-    const oldProps = {
-      data: this.props.data,
-      user: this.props.user,
-      lang: this.props.lang,
-      userToken: this.props.userToken,
-      labels: this.props.labels
-    };
-    const newProps = {
-      data: props.data,
-      user: props.user,
-      lang: props.lang,
-      userToken: props.userToken,
-      labels: props.labels
-    };
+    close() {
+      this.withWidget((widget: any) => widget.close());
+    },
 
-    return !isEqual(oldProps, newProps);
-  }
+    instance(): any {
+      return this.withWidget((widget: any) => widget);
+    },
 
-  componentDidUpdate(prevProps: AnnounceKitProps) {
-    const oldProps = {
-      data: this.props.data,
-      user: this.props.user,
-      lang: this.props.lang,
-      userToken: this.props.userToken,
-      labels: this.props.labels
-    };
-    const newProps = {
-      data: prevProps.data,
-      user: prevProps.user,
-      lang: prevProps.lang,
-      userToken: prevProps.userToken,
-      labels: prevProps.labels
-    };
-    if (!isEqual(oldProps, newProps)) {
-      if (this.widgetInstance) {
-        this.widgetInstance.destroy();
-        this.loaded();
-      }
+    unread(): number {
+      return this.withWidget((widget: any) => widget.state.ui.unreadCount);
     }
-  }
+  }));
 
-  componentDidMount() {
+  const { onWidgetOpen, onWidgetClose, onWidgetResize, onWidgetUnread } = props;
+
+  // Wire event handlers
+  useEffect(() => {
     if (typeof window === "undefined") return;
 
-    if (!window["announcekit"]) {
-      window["announcekit"] = window["announcekit"] || {
-        queue: [],
-        push: function (x) {
-          window["announcekit"].queue.push(x);
-        },
-        on: function (n, x) {
-          window["announcekit"].queue.push([n, x]);
-        },
-      };
+    const announcekit = globalAnnouncekit();
+    const wrapCheck = (handler?: Function) => (event: any) =>
+      event.widget === widgetRef.current ? handler?.(event) : null;
 
-      let scripttag = document.createElement("script") as HTMLScriptElement;
-      scripttag["async"] = true;
-      scripttag["src"] = `https://cdn.announcekit.app/widget-v2.js`;
-      let scr = document.getElementsByTagName("script")[0];
-      scr?.parentNode?.insertBefore(scripttag, scr);
-    }
+    const openHandler = wrapCheck(onWidgetOpen);
+    const closeHandler = wrapCheck(onWidgetClose);
+    const resizeHandler = wrapCheck(onWidgetResize);
+    const unreadHandler = wrapCheck(onWidgetUnread);
 
-    this.loaded();
-  }
+    announcekit.on("widget-open", openHandler);
+    announcekit.on("widget-close", closeHandler);
+    announcekit.on("widget-resize", resizeHandler);
+    announcekit.on("widget-unread", unreadHandler);
 
-  private loaded() {
-    let style = this.props.widgetStyle;
-
-    let styleParams = {
-      badge: {
-        style,
-      },
-      line: {
-        style,
-      },
-      float: {
-        style,
-      },
+    return () => {
+      announcekit.off("widget-open", openHandler);
+      announcekit.off("widget-close", closeHandler);
+      announcekit.off("widget-resize", resizeHandler);
+      announcekit.off("widget-unread", unreadHandler);
     };
+  }, [onWidgetOpen, onWidgetClose, onWidgetResize, onWidgetUnread]);
 
-    if (this.props.floatWidget) {
-      delete styleParams.badge;
-      delete styleParams.line;
-      this.selector = null;
+  const {
+    customConfig,
+    widget,
+    floatWidget,
+    embedWidget,
+    boosters = true,
+    widgetStyle,
+    lang,
+    name,
+    user,
+    data
+  } = props;
+
+  const [loc, setLoc] = React.useState(window.location.href);
+
+  useEffect(() => {
+    if (!props.trackLocationChanges) {
+      return;
     }
 
-    this.name = Math.random().toString(36).substring(10);
+    let timer = setInterval(() => {
+      if (loc !== window.location.href) {
+        setLoc(window.location.href);
+      }
+    }, 250);
 
-    window["announcekit"].push({
-      widget: this.props.widget,
-      name: this.name,
+    return () => clearInterval(timer);
+  }, [props.trackLocationChanges, loc]);
+
+  // Push new widget config
+  useDeepCompareEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const announcekit = globalAnnouncekit();
+    const widgetSymbol = Math.random().toString(36).substring(10);
+
+    widgetRef.current?.destroy();
+    widgetRef.current = null;
+
+    announcekit.push({
+      ...customConfig,
+
+      selector: elementRef.current,
       version: 2,
       framework: "react",
       framework_version: "2.0.0",
-      selector: this.selector,
-      embed: this.props.embedWidget,
-      boosters:
-        typeof this.props.boosters === "undefined" ? true : this.props.boosters,
-      ...styleParams,
-      onInit: (_widget) => {
-        if (_widget.conf.name !== this.name) {
-          return _widget.destroy();
-        }
 
-        const ann = window["announcekit"];
+      react_symbol: widgetSymbol,
 
-        this.widgetInstance = _widget;
-
-        if (this.props.catchClick) {
-          const elem = document.querySelector(this.props.catchClick);
-          if (elem) elem.addEventListener("click", () => _widget.open());
-        }
-
-        this.widgetHandlers.forEach((h) => h(_widget));
-        this.widgetHandlers = [];
-
-        ann.on("widget-open", ({ widget }) => {
-          if (widget === _widget && this.props.onWidgetOpen) {
-            this.props.onWidgetOpen({ widget });
-          }
-        });
-
-        ann.on("widget-close", ({ widget }) => {
-          if (widget === _widget && this.props.onWidgetClose) {
-            this.props.onWidgetClose({ widget });
-          }
-        });
-
-        ann.on("widget-resize", ({ widget, size }) => {
-          if (widget === _widget && this.props.onWidgetResize) {
-            this.props.onWidgetResize({ widget, size });
-          }
-        });
-
-        if (this.props.onWidgetUnread) {
-          this.props.onWidgetUnread(_widget.state.ui.unreadCount);
-        }
+      style: {
+        line: floatWidget ? {} : { ...widgetStyle },
+        badge: floatWidget ? {} : { ...widgetStyle },
+        float: { ...widgetStyle }
       },
-      data: this.props.data,
-      user: this.props.user,
-      lang: this.props.lang,
-      labels: this.props.labels,
-      user_token: this.props.userToken
+
+      onInit: (w: any) => {
+        if (w.conf.react_symbol !== widgetSymbol) {
+          return w.destroy();
+        }
+
+        widgetHandlers.current.forEach((x: any) => x(w));
+        widgetHandlers.current = [];
+
+        widgetRef.current?.destroy();
+        widgetRef.current = w;
+      },
+
+      boosters,
+      widget,
+      lang,
+      name,
+      user,
+      data
     });
-  }
 
-  private withWidget(fn) {
-    return new Promise((res) => {
-      if (this.widgetInstance) {
-        return res(fn(this.widgetInstance));
-      } else {
-        this.widgetHandlers.push((widget) => {
-          res(fn(widget));
-        });
-      }
-    });
-  }
+    return () => {
+      widgetRef.current?.destroy();
+      widgetRef.current = null;
+    };
+  }, [
+    { user, data, lang },
+    customConfig,
+    widget,
+    name,
+    floatWidget,
+    embedWidget,
+    boosters,
+    loc
+  ]);
 
-  open() {
-    return this.withWidget((widget) => widget.open());
-  }
-
-  close() {
-    return this.withWidget((widget) => widget.close());
-  }
-
-  instance() {
-    return this.withWidget((widget) => widget);
-  }
-
-  unread() {
-    return this.withWidget((widget) => widget.state.ui.unreadCount);
-  }
-
-  render() {
-    return (
-      <div
-        style={{ display: "inline" }}
-        className={this.selector ? this.selector.slice(1) : ``}
-      >
-        {this.props.children}
-      </div>
-    );
-  }
+  return (
+    <div
+      ref={elementRef}
+      style={{ display: "inline" }}
+      className={props.className ?? ""}
+    >
+      {props.children}
+    </div>
+  );
 }
 
-export default AnnounceKit;
+export default forwardRef(AnnounceKit);

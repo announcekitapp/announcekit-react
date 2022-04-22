@@ -174,12 +174,18 @@ function AnnounceKit(props: AnnounceKitProps, ref: any) {
       framework_version: "2.0.0",
 
       react_symbol: widgetSymbol,
-
-      style: {
-        line: floatWidget ? {} : { ...widgetStyle },
-        badge: floatWidget ? {} : { ...widgetStyle },
-        float: { ...widgetStyle }
+      
+      line: {
+        style: floatWidget ? {} : { ...widgetStyle } 
       },
+      
+      badge: {
+        style: floatWidget ? {} : { ...widgetStyle } 
+      },
+      
+      float: {
+        style: { ...widgetStyle } 
+      },      
 
       onInit: (w: any) => {
         if (w.conf.react_symbol !== widgetSymbol) {

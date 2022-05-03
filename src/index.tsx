@@ -34,6 +34,14 @@ export type AnnounceKitProps = {
   customConfig?: any;
 };
 
+export type Handler = {
+  withWidget: (fn: Function) => Promise<any>;
+  open: () => void;
+  close: () => void;
+  instance: () => any;
+  unread: () => Promise<number>;
+};
+
 function globalAnnouncekit() {
   const win = window as any;
 
@@ -68,7 +76,7 @@ function AnnounceKit(props: AnnounceKitProps, ref: any) {
   const widgetRef = useRef<any>(null);
   const widgetHandlers = useRef<any>([]);
 
-  useImperativeHandle(ref, () => ({
+  useImperativeHandle<any, Handler>(ref, () => ({
     withWidget(fn: Function): any {
       return new Promise((res) => {
         if (widgetRef.current) {
@@ -89,11 +97,11 @@ function AnnounceKit(props: AnnounceKitProps, ref: any) {
       this.withWidget((widget: any) => widget.close());
     },
 
-    instance(): any {
+    instance(): Promise<any> {
       return this.withWidget((widget: any) => widget);
     },
 
-    unread(): number {
+    unread(): Promise<number> {
       return this.withWidget((widget: any) => widget.state.ui.unreadCount);
     }
   }));
@@ -174,18 +182,18 @@ function AnnounceKit(props: AnnounceKitProps, ref: any) {
       framework_version: "2.0.0",
 
       react_symbol: widgetSymbol,
-      
+
       line: {
         style: floatWidget ? {} : { ...widgetStyle } 
       },
-      
+
       badge: {
         style: floatWidget ? {} : { ...widgetStyle } 
       },
-      
+
       float: {
         style: { ...widgetStyle } 
-      },      
+      },
 
       onInit: (w: any) => {
         if (w.conf.react_symbol !== widgetSymbol) {

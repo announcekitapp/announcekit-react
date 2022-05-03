@@ -69,8 +69,10 @@ You can use `ref` property to access the widget instance and call control functi
 - `instance()`
 
 ```js
+import AnnounceKit, {Handler} from "announcekit-react";
+
 function App() {
-  const ref = React.createRef<AnnounceKit>();
+  const ref = React.createRef<Handler>();
 
   React.useEffect(() => {
     ref.current.unread().then(an => console.log("unread", an));

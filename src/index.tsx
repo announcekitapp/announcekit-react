@@ -16,6 +16,8 @@ export type AnnounceKitProps = {
   onWidgetClose?: Function;
   onWidgetResize?: Function;
   onWidgetUnread?: Function;
+  labels?: string[];
+  user_token?: string;
 
   widgetStyle?: React.CSSProperties;
   boosters?: boolean;
@@ -50,7 +52,7 @@ function globalAnnouncekit() {
         win.announcekit.on("init", function () {
           win.announcekit.off(name, fn);
         });
-      }
+      },
     };
 
     let scripttag = document.createElement("script") as HTMLScriptElement;
@@ -95,7 +97,7 @@ function AnnounceKit(props: AnnounceKitProps, ref: any) {
 
     unread(): number {
       return this.withWidget((widget: any) => widget.state.ui.unreadCount);
-    }
+    },
   }));
 
   const { onWidgetOpen, onWidgetClose, onWidgetResize, onWidgetUnread } = props;
@@ -134,9 +136,11 @@ function AnnounceKit(props: AnnounceKitProps, ref: any) {
     boosters = true,
     widgetStyle,
     lang,
+    labels,
+    user_token,
     name,
     user,
-    data
+    data,
   } = props;
 
   const [loc, setLoc] = React.useState(window.location.href);
@@ -174,18 +178,18 @@ function AnnounceKit(props: AnnounceKitProps, ref: any) {
       framework_version: "2.0.0",
 
       react_symbol: widgetSymbol,
-      
+
       line: {
-        style: floatWidget ? {} : { ...widgetStyle } 
+        style: floatWidget ? {} : { ...widgetStyle },
       },
-      
+
       badge: {
-        style: floatWidget ? {} : { ...widgetStyle } 
+        style: floatWidget ? {} : { ...widgetStyle },
       },
-      
+
       float: {
-        style: { ...widgetStyle } 
-      },      
+        style: { ...widgetStyle },
+      },
 
       onInit: (w: any) => {
         if (w.conf.react_symbol !== widgetSymbol) {
@@ -202,9 +206,12 @@ function AnnounceKit(props: AnnounceKitProps, ref: any) {
       boosters,
       widget,
       lang,
+      labels,
+      user_token,
+      embed: !!embedWidget,
       name,
       user,
-      data
+      data,
     });
 
     return () => {
@@ -212,14 +219,14 @@ function AnnounceKit(props: AnnounceKitProps, ref: any) {
       widgetRef.current = null;
     };
   }, [
-    { user, data, lang },
+    { user, data, lang, labels, user_token },
     customConfig,
     widget,
     name,
     floatWidget,
     embedWidget,
     boosters,
-    loc
+    loc,
   ]);
 
   return (

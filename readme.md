@@ -88,3 +88,9 @@ function App() {
     )
 }
 ```
+
+## Upgrading from v2 to v3
+
+# Breaking Changes
+
+`catchClick` prop has been removed and replaced with the new ref API '.open()' method

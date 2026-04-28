@@ -65,7 +65,7 @@ function globalAnnouncekit() {
   return win.announcekit;
 }
 
-function AnnounceKit(props: AnnounceKitProps, ref: any) {
+export const AnnounceKit = forwardRef((props: AnnounceKitProps, ref: any) => {
   const elementRef = useRef<HTMLDivElement>(null);
   const widgetRef = useRef<any>(null);
   const widgetHandlers = useRef<any>([]);
@@ -238,6 +238,4 @@ function AnnounceKit(props: AnnounceKitProps, ref: any) {
       {props.children}
     </div>
   );
-}
-
-export default forwardRef(AnnounceKit);
+});
